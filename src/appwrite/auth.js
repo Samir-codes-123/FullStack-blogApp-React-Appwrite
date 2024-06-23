@@ -45,7 +45,7 @@ export class Authservice {
   // to get the current user status in homepage
   async getCurrentUser() {
     try {
-      return await this.account.get();
+      return await this.account.get(); // sends data
     } catch (error) {
       console.log("Appwrite service :: getCurrentUser:: error", error);
     }
@@ -62,4 +62,4 @@ export class Authservice {
 }
 //object
 const authService = new Authservice(); // when made object then get info to client using constructor
-export default Authservice;
+export default authService;
