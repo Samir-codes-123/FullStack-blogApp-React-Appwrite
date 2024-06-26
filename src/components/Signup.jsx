@@ -1,28 +1,28 @@
-import { useState } from "react";
-import authService from "../appwrite/auth";
+import React, { useState } from "react";
+import authService from "../appwrite/auth.js";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../store/authSlice";
+import { login } from "../store/authSlice.js";
 import { Button, Input, Logo } from "./index.js";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
 function Signup() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
 
   const create = async (data) => {
     setError("");
     try {
-      const session = await authService.createAccount(data);
-      if (session) {
+      const userData = await authService.createAccount(data);
+      if (userData) {
         const userData = await authService.getCurrentUser();
         if (userData) dispatch(login(userData));
         navigate("/");
       }
     } catch (error) {
-      setError(error);
+      setError(error.message);
     }
   };
 
@@ -53,16 +53,16 @@ function Signup() {
         <form onSubmit={handleSubmit(create)}>
           <div className="space-y-5">
             <Input
-              label="Full Name:"
-              placeholder="Enter your full name.."
+              label="Full Name: "
+              placeholder="Enter your full name"
               {...register("name", {
                 required: true,
               })}
             />
             <Input
+              label="Email: "
+              placeholder="Enter your email"
               type="email"
-              placeholder="Enter email"
-              label="Email:"
               {...register("email", {
                 required: true,
                 validate: {
@@ -73,18 +73,21 @@ function Signup() {
               })}
             />
             <Input
-              label="Password:"
+              label="Password: "
               type="password"
               placeholder="Enter your password"
               {...register("password", {
                 required: true,
               })}
             />
-            <Button type="submit">Create Account</Button>
+            <Button type="submit" className="w-full">
+              Create Account
+            </Button>
           </div>
         </form>
       </div>
     </div>
   );
 }
+
 export default Signup;
